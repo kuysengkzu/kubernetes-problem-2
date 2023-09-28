@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: 'employee-depl'
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: employee-app
+  template:
+    metadata:
+      labels:
+        app: employee-app
+    spec:
+      containers:
+        - env:
+          - name: MONGO_DB_URL
+            value: "mongodb+srv://<username>:<password>@staging.h1jzujn.mongodb.net/aupp"
+          image: kuyseng/28th-labs-4
+          name: employee-app
+          ports:
+            - containerPort: 3000
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: employee-svc
+spec:
+  ports:
+    - port: 3000
+      targetPort: 3000
+  selector:
+    app: employee-app
